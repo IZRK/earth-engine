@@ -18,7 +18,7 @@ function maskS2clouds(image) {
 
 var dataset = ee.ImageCollection("COPERNICUS/S2_HARMONIZED")
                 .filterDate('2021-09-01', '2021-09-30')
-                .filterBounds(bb).select('B.*')
+                .filterBounds(bb).select('B.*') // bb je rectangle na mapi narisan s tem ID-jem
 
 // Map.addLayer(dataset.median(), {bands: ['B2']});
 batch.Download.ImageCollection.toAsset(dataset, 'Sentinel', 
