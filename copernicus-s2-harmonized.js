@@ -24,9 +24,18 @@ function addsa(input) {
   return input.addBands(sa).toFloat()
 }
 
+function addNDVI(image) {
+  var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  return image.addBands(ndvi);
+};
+
 var dataset = ee.ImageCollection("COPERNICUS/S2_HARMONIZED")
-                .filterDate('2021-04-01', '2021-04-30')
-                .filterBounds(bb).select('B.*').map(addsa)
+                .filterDate('2021-04-25', '2021-04-30')
+                // .filterMetadata('CLOUDY_PIXEL_PERCENTAGE', 'less_than', 1)
+                .filterBounds(bb) // custom rectangle drawn on map
+                .select('B.*')
+                .map(addNDVI)
+                .map(addsa)
 
 // Map.addLayer(dataset.median(), {bands: ['B2']});
 batch.Download.ImageCollection.toAsset(dataset, 'Sentinel', 
