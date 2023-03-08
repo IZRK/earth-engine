@@ -16,9 +16,17 @@ function maskS2clouds(image) {
   return image.updateMask(mask).divide(10000);
 }
 
+function addsa(input) {
+  var sa = ee.Image().expression('((NIR-Red)/(NIR+Red+0.428))*1.428', {
+    NIR: input.select('B8').multiply(0.0001),
+    Red: input.select('B4').multiply(0.0001)
+  }).rename('savi')
+  return input.addBands(sa).toFloat()
+}
+
 var dataset = ee.ImageCollection("COPERNICUS/S2_HARMONIZED")
-                .filterDate('2021-09-01', '2021-09-30')
-                .filterBounds(bb).select('B.*') // bb je rectangle na mapi narisan s tem ID-jem
+                .filterDate('2021-04-01', '2021-04-30')
+                .filterBounds(bb).select('B.*').map(addsa)
 
 // Map.addLayer(dataset.median(), {bands: ['B2']});
 batch.Download.ImageCollection.toAsset(dataset, 'Sentinel', 
