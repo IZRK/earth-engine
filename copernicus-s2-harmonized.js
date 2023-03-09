@@ -29,11 +29,18 @@ function addNDVI(image) {
   return image.addBands(ndvi);
 };
 
+function addNDWI(image) {
+  var ndvi = image.normalizedDifference(['B3', 'B8']).rename('NDWI');
+  return image.addBands(ndvi);
+};
+
+
 var dataset = ee.ImageCollection("COPERNICUS/S2_HARMONIZED")
-                .filterDate('2021-04-25', '2021-04-30')
+                .filterDate('2021-10-01', '2021-11-30')
                 // .filterMetadata('CLOUDY_PIXEL_PERCENTAGE', 'less_than', 1)
                 .filterBounds(bb) // custom rectangle drawn on map
                 .select('B.*')
+                .map(addNDWI)
                 .map(addNDVI)
                 .map(addsa)
 
