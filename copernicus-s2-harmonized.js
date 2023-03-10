@@ -16,6 +16,8 @@ function maskS2clouds(image) {
   return image.updateMask(mask).divide(10000);
 }
 
+// for arcgis raster calculator 
+// Float(("20210425_B8"*0.0001)-("20210425_B4"*0.0001)) / Float(("20210425_B8"*0.0001)+("20210425_B4"*0.0001)+ 0.428) * (1.428)
 function addsa(input) {
   var sa = ee.Image().expression('((NIR-Red)/(NIR+Red+0.428))*1.428', {
     NIR: input.select('B8').multiply(0.0001),
